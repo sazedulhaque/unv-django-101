@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ article.title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .article-header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .article-title {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 2.5em;
+        }
+        .article-meta {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .article-content {
+            color: #444;
+            font-size: 1.1em;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            white-space: pre-line;
+        }
+        .nav-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+        .author-info {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 30px;
+        }
+        .author-info h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .published-date {
+            color: #28a745;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="{% url 'blog:article-list' %}" class="nav-link">← Back to Articles</a>
+        
+        <article>
+            <header class="article-header">
+                <h1 class="article-title">{{ article.title }}</h1>
+                <div class="article-meta">
+                    <span>By <strong>{{ article.author.username }}</strong></span> | 
+                    <span class="published-date">Published: {{ article.published_date|date:"F j, Y \a\t g:i A" }}</span>
+                </div>
+            </header>
+            
+            <div class="article-content">
+                {{ article.content }}
+            </div>
+            
+            <div class="author-info">
+                <h3>About the Author</h3>
+                <p><strong>{{ article.author.first_name }} {{ article.author.last_name }}</strong></p>
+                <p>Username: {{ article.author.username }}</p>
+                {% if article.author.email %}
+                <p>Contact: {{ article.author.email }}</p>
+                {% endif %}
+            </div>
+        </article>
+    </div>
+</body>
+</html>
