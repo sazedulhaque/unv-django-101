@@ -9,6 +9,12 @@ from django.views.generic import (
     ListView,
     UpdateView,
 )
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.response import Response
+
+from .serializers import ArticleSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -106,3 +112,45 @@ class ArticleDetailView(DetailView):
 class ArticleDeleteView(DeleteView):
     model = Article
     success_url = reverse_lazy("blog:article-list")
+
+
+class BlogViewSet(viewsets.ModelViewSet):
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
+    # permission_classes = []
+
+    def get_permissions(self):
+        """
+        Custom permissions:
+        - List view is open to everyone
+        - Other operations require authentication
+        """
+        if self.action == "list":
+            permission_classes = []  # No authentication required for list
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
+
+    # def perform_create(self, serializer):
+    #     """Automatically set the author to the current user"""
+    #     serializer.save(author=self.request.user)
+
+    # def update(self, request, *args, **kwargs):
+    #     """Only allow author to update their own blog"""
+    #     blog = self.get_object()
+    #     if blog.author != request.user:
+    #         return Response(
+    #             {"error": "You can only update your own blogs"},
+    #             status=status.HTTP_403_FORBIDDEN,
+    #         )
+    #     return super().update(request, *args, **kwargs)
+
+    # def destroy(self, request, *args, **kwargs):
+    #     """Only allow author to delete their own blog"""
+    #     blog = self.get_object()
+    #     if blog.author != request.user:
+    #         return Response(
+    #             {"error": "You can only delete your own blogs"},
+    #             status=status.HTTP_403_FORBIDDEN,
+    #         )
+    #     return super().destroy(request, *args, **kwargs)

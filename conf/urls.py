@@ -17,6 +17,14 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import include, path
+from rest_framework.routers import DefaultRouter
+
+from blog import views
+from core import views as auth_views
+
+router = DefaultRouter()
+router.register(r"blogs", views.BlogViewSet, basename="blog")
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -25,4 +33,8 @@ urlpatterns = [
         "",
         include("blog.urls"),
     ),
+    path("api/", include(router.urls)),
+    path("api/register/", auth_views.register_user, name="register"),
+    path("api/login/", auth_views.login_user, name="login"),
+    path("api/logout/", auth_views.logout_user, name="logout"),
 ]
